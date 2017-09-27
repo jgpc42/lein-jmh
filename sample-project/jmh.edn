@@ -1,0 +1,6 @@
+{:benchmarks [#(Thread/sleep 1)]
+
+ :options {:jmh/default {:fork {:count 1, :warmups 0}
+                         :measurement {:count 1, :iterations 1}
+                         :mode :single-shot
+                         :threads 1}}}
