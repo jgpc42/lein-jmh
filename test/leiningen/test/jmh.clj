@@ -11,17 +11,20 @@
           {:a [5], :b {:c 6, :d #{7}}, :f 8}))))
 
 (deftest ^:integration test-jmh
-  (let [opts {:fail-on-error true
-              :output :err
+  (let [temp (doto (java.io.File/createTempFile "temp" ".edn")
+               .deleteOnExit)
+        opts {:fail-on-error true
+              :output (str temp)
               :status true
               :warnings false}
-        result (util/run-task-in-project "sample-project" jmh/jmh [opts])]
+        result (util/run-task-in-project "sample-project" jmh/jmh [opts])
+        output (slurp temp)]
 
     (is (= [\( \{]
-           (take 2 (:err result)))
-        (str "invalid stderr output:\n" (pr-str (:err result))))
+           (take 2 output))
+        (str "invalid stderr output:\n" (pr-str output)))
 
-    (is (-> (:err result) edn/read-string first :samples))
+    (is (-> output edn/read-string first :samples))
 
     (is (re-find #"(?m)^# JMH version: [.\d]+$"
                  (:out result)))
