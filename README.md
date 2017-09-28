@@ -1,3 +1,6 @@
+[![Clojars Project](https://img.shields.io/clojars/v/lein-jmh.svg)](https://clojars.org/lein-jmh)
+[![Travis CI](https://travis-ci.org/jgpc42/lein-jmh.svg?branch=master)](https://travis-ci.org/jgpc42/lein-jmh)
+
 ### Adding to your project
 
 Add `[lein-jmh "0.1.0"]` to your `:plugins` section. For example:
