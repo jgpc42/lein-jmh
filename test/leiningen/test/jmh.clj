@@ -16,7 +16,13 @@
               :status true
               :warnings false}
         result (util/run-task-in-project "sample-project" jmh/jmh [opts])]
+
+    (is (= [\( \{]
+           (take 2 (:err result)))
+        (str "invalid stderr output:\n" (pr-str (:err result))))
+
     (is (-> (:err result) edn/read-string first :samples))
+
     (is (re-find #"(?m)^# JMH version: [.\d]+$"
                  (:out result)))
     (is (re-find #"(?m)^# Run complete. Total time: [:\d]+$"
