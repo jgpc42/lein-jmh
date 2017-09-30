@@ -165,7 +165,7 @@ may be given in place of the options map.
 Please see the jmh-clojure project for more information on
 configuration and options."
   ([project]
-   (jmh project ""))
+   (jmh project "nil"))
   ([project options-or-keyword]
    (let [task-arg (read-string options-or-keyword)
 
