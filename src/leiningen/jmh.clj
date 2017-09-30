@@ -156,7 +156,7 @@ the following options are recognized by this task:
              the results are instead written to stderr. If a string is
              provided, write the result to the specified file.
   :progress  if true or :out, report progress to stdout, if :err report
-             to stderr. Defaults to :out.
+             to stderr. If false, ignore. Defaults to :out.
   :pprint    if true, pretty print the results.
 
 To return data about available profilers, the single keyword :profilers
