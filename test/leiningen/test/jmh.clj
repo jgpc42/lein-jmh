@@ -22,7 +22,7 @@
 
     (is (= [\( \{]
            (take 2 output))
-        (str "invalid stderr output:\n" (pr-str output)))
+        (str "invalid output:\n" (pr-str output)))
 
     (is (-> output edn/read-string first :samples))
 
