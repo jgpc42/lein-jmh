@@ -1,6 +1,14 @@
-{:benchmarks [#(Thread/sleep 1)]
+;; This sample file is used only to test the plugin. See the
+;; `sample.jmh.edn` file mentioned in the README for documentation.
 
- :options {:jmh/default {:fork {:count 1, :warmups 0}
-                         :measurement {:count 1, :iterations 1}
-                         :mode :single-shot
-                         :threads 1}}}
+{:benchmarks
+ [#(Thread/sleep 1)
+  {:fn clojure.core/rand, :args [:param/limit]}]
+
+ :options
+ {:jmh/default {:fork {:count 1, :warmups 0}
+                :measurement {:count 1, :iterations 1}
+                :mode :single-shot
+                :threads 1}}
+
+ :params {:limit 42}}
