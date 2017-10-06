@@ -2,13 +2,41 @@
   (:require [clojure.edn :as edn]
             [clojure.java.io :as io]
             [clojure.set :as set]
-            [leiningen.jmh.form :as form]
             [leiningen.core.eval :as eval]
             [leiningen.core.main :as main]
-            [leiningen.core.project :as project]))
+            [leiningen.core.project :as project])
+  (:import [java.io PushbackReader StringReader]))
 
-(def ^:private version
+(def ^{:private true
+       :doc "The task subprocess dependency versions."}
+  version
   (-> "version.edn" io/resource slurp edn/read-string))
+
+(def ^{:private true
+       :doc "The task subprocess namespace."}
+  task-ns 'jmh.task)
+
+(def ^{:private true
+       :doc "The sequence of forms from the task namespace."}
+  task-forms
+  (let [file (-> (str task-ns) (.replace \. \/)
+                 (str ".clj") io/resource slurp)
+        reader (PushbackReader. (StringReader. file))]
+    (->> (repeat reader)
+         (map #(read % false nil))
+         (take-while some?)
+         doall)))
+
+(def ^{:private true
+       :doc "The task subprocess initialization code."}
+  init-form
+  (let [orig-ns (gensym "orig")]
+    `(do (clojure.lang.Namespace/findOrCreate '~task-ns)
+         (intern (the-ns '~task-ns) '~orig-ns (ns-name *ns*))
+         ~@task-forms
+         (in-ns ~orig-ns))))
+
+;;;
 
 (defn merge-recursively
   "Merge two like-values recursively with an appropriate combining fn.
@@ -107,16 +135,13 @@ configuration and options."
          project (project/merge-profiles project [{:dependencies deps}])
 
          form (if (= :profilers task-arg)
-                (let [rows `(->> (jmh.core/profilers)
-                                 (filter :supported)
-                                 (sort-by :name))]
-                  (form/print-table [:name :desc] rows))
+                `(jmh.task/list-profilers)
                 (let [opts (merge-options project task-arg)
                       file (:file opts "jmh.edn")
                       env (merge-environment project file)]
                   (when-not (or (seq (:benchmarks env))
                                 (seq (:externs opts)))
                     (main/abort "No benchmarks found"))
-                  (form/run-benchmarks env opts)))]
+                  `(jmh.task/run-benchmarks '~env '~opts)))]
 
-     (eval/eval-in-project project form form/init))))
+     (eval/eval-in-project project form init-form))))
