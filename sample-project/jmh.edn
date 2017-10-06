@@ -2,7 +2,7 @@
 ;; `sample.jmh.edn` file mentioned in the README for documentation.
 
 {:benchmarks
- [#(Thread/sleep 1)
+ [(fn [] (Thread/sleep 1))
   {:fn clojure.core/rand, :args [:param/limit]}]
 
  :options
