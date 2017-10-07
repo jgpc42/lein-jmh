@@ -1,4 +1,8 @@
-## 0.2.0 (2017-10-XX)
+## 0.2.1 (2017-10-07)
+
+* Upgrade jmh-clojure version to 0.1.5
+
+## 0.2.0 (2017-10-06)
 
 * New options: `:exclude`, `:format` and `:sort`
 
