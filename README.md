@@ -29,6 +29,23 @@ The task takes a single argument that gives the task and/or benchmark options. P
 lein jmh '{:file "benchmarks/parser.edn", :select :decode}'
 ```
 
+### Available options
+
+In addition to the normal run [options][run-doc], extra task options include:
+
+| Option        | Description                                    |
+| ------------- | ---------------------------------------------- |
+| `:exclude`    | keys to remove from each benchmark result map. |
+| `:file`       | read the given file instead of `jmh.edn`.      |
+| `:format`     | print results in the given format.             |
+| `:only`       | keys to select from each benchmark result map. |
+| `:output`     | specify the location to write the results.     |
+| `:progress`   | display progress data while running.           |
+| `:pprint`     | equivalent to `:format :pprint`.               |
+| `:sort`       | key(s) to order the results by.                |
+
+Please see `lein help jmh` for more information on the available options.
+
 ### Tiered compilation
 
 The JVM option `"-XX:TieredStopAtLevel=1"` is normally set automatically by Leiningen when running code in your project. This option speeds up JVM startup time but is normally problematic for benchmarking as it disables the [C2][c2] compiler.
@@ -43,7 +60,7 @@ Alternatively, use `:fork` and specify different `:jvm :args` to override the Le
 
 ### More information
 
-This plugin is a thin wrapper for the [jmh-clojure][jmh-clj] library. Please see the documentation there for more.
+This plugin is a wrapper for the [jmh-clojure][jmh-clj] library. Please see the documentation there for more.
 
 ### Running the tests
 
