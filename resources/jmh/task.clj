@@ -175,9 +175,9 @@
        s))))
 
 (defn align-column
-  "Update each row by aligning the given tuple key to the left and right
-  of its column."
-  [col-key min-width rows]
+  "Update each row by aligning the given tuple key's values in its
+  column: the first to the left and the second to the right."
+  [col-key sep-width rows]
   (let [vals (map (comp count str first col-key) rows)
         max (if (seq vals)
               (apply max vals)
@@ -185,7 +185,7 @@
     (for [m rows]
       (if-let [[n unit] (col-key m)]
         (let [left (str n)
-              nspace (+ min-width (- max (count left)))
+              nspace (+ sep-width (- max (count left)))
               sep (apply str (repeat nspace \space))]
           (assoc m col-key (str left sep unit)))
         m))))
