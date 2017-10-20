@@ -1,3 +1,7 @@
+## 0.2.2 (2017-10-20)
+
+* Upgrade jmh-clojure version to 0.1.6
+
 ## 0.2.1 (2017-10-07)
 
 * Upgrade jmh-clojure version to 0.1.5

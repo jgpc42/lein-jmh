@@ -3,12 +3,12 @@
 
 ### Adding to your project
 
-Add `[lein-jmh "0.2.1"]` to your `:plugins` section. For example:
+Add `[lein-jmh "0.2.2"]` to your `:plugins` section. For example:
 
 ```clojure
 (defproject your-project "0.1.0-SNAPSHOT"
   #_...
-  :plugins [[lein-jmh "0.2.1"]])
+  :plugins [[lein-jmh "0.2.2"]])
 ```
 
 ### What is it?
@@ -40,8 +40,8 @@ In addition to the normal run [options][run-doc], extra task options include:
 | `:format`     | print results in the given format.             |
 | `:only`       | keys to select from each benchmark result map. |
 | `:output`     | specify the location to write the results.     |
-| `:progress`   | display progress data while running.           |
 | `:pprint`     | equivalent to `:format :pprint`.               |
+| `:progress`   | display progress data while running.           |
 | `:sort`       | key(s) to order the results by.                |
 
 Please see `lein help jmh` for more information on the available options.
