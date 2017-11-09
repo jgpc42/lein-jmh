@@ -123,9 +123,9 @@ may be given in place of the options map.
 Please see the jmh-clojure project for more information on
 configuration and options."
   ([project]
-   (jmh project ""))
+   (jmh project "nil"))
   ([project options-or-keyword]
-   (let [task-arg (edn/read-string options-or-keyword)
+   (let [task-arg (read-string options-or-keyword)
 
          project (if (-> project meta :profiles :jmh)
                    (project/merge-profiles project [:jmh])
