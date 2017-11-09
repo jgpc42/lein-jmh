@@ -1,7 +1,7 @@
 (def version
   (-> "resources/version.edn" slurp read-string))
 
-(defproject lein-jmh "0.2.2"
+(defproject lein-jmh "0.2.3"
   :description "Run jmh-clojure benchmarks with Leiningen."
   :url "https://github.com/jgpc42/lein-jmh"
   :license {:name "Eclipse Public License"

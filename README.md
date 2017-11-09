@@ -3,12 +3,12 @@
 
 ### Adding to your project
 
-Add `[lein-jmh "0.2.2"]` to your `:plugins` section. For example:
+Add `[lein-jmh "0.2.3"]` to your `:plugins` section. For example:
 
 ```clojure
 (defproject your-project "0.1.0-SNAPSHOT"
   #_...
-  :plugins [[lein-jmh "0.2.2"]])
+  :plugins [[lein-jmh "0.2.3"]])
 ```
 
 ### What is it?
@@ -20,13 +20,13 @@ Leiningen plugin for running [jmh-clojure][jmh-clj] benchmarks.
 By default, a `jmh.edn` file at the root of your project is used to configure lein-jmh. Please see the [sample file][sample] for documentation. For example, the following will run all benchmarks:
 
 ```bash
-lein jmh
+$ lein jmh
 ```
 
 The task takes a single argument that gives the task and/or benchmark options. Please see the jmh-clojure [docs][run-doc] or `lein help jmh` for more information. For example, to run all benchmarks that match a selector from a data file in an alternate location:
 
 ```bash
-lein jmh '{:file "benchmarks/parser.edn", :select :decode}'
+$ lein jmh '{:file "benchmarks/parser.edn", :select :decode}'
 ```
 
 ### Available options
