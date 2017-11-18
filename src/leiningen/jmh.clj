@@ -61,10 +61,15 @@
        (try
          (-> file slurp edn/read-string)
          (catch Exception e
-           (if (= (.getMessage e) "No dispatch macro for: (")
+           (condp = (.getMessage e)
+             "No dispatch macro for: ("
              (throw (RuntimeException.
                      (str "edn format does not support the '#(...)' "
                           "anonymous function reader macro")))
+             "No dispatch macro for: \""
+             (throw (RuntimeException.
+                     (str "edn format does not support the '#\"...\"' "
+                          "regex reader macro")))
              (throw e)))))
      (:jmh project {}))))
 
