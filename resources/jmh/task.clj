@@ -164,14 +164,21 @@
 
 (defn pr-str-max
   "Convert `val` to string via `pr-str`. If the string is longer than
-  `max-width`, truncate and add `suffix`."
-  ([val] (pr-str-max val 48 " ..."))
-  ([val max-width suffix]
+  `max-width`, truncate the middle and replace with `replacement`."
+  ([val] (pr-str-max val 48 " ... "))
+  ([val max-width replacement]
+   {:pre [(< (count replacement) max-width)]}
    (let [s (pr-str val)
          len (count s)]
      (if (> len max-width)
-       (let [end (- max-width (count suffix))]
-         (str (subs s 0 end) suffix))
+       (let [rlen (count replacement)
+             off (quot rlen 2)
+             mid (quot max-width 2)
+             beg (dec (+ (- mid off) (rem max-width 2)))
+             end (dec (+ (- len mid) off (rem rlen 2)))]
+         (str (subs s 0 beg)
+              replacement
+              (subs s end len)))
        s))))
 
 (defn align-column

@@ -33,10 +33,13 @@
            (task/format-table [:a :foo] [{:foo 0} {:a 0}])))))
 
 (deftest test-pr-str-max
-  (is (= "12345678"
-         (task/pr-str-max 12345678 8 " ...")))
-  (is (= "1234 ..."
-         (task/pr-str-max 123456789 8 " ..."))))
+  (are [s x n] (= s (task/pr-str-max 'x n " ... "))
+    " ... o"               pkg.Foo 6
+    "my.ns/bar"            my.ns/bar 9
+    "my ... ux"            my.ns/quux 9
+    "my.ns/ ... ng-name"   my.ns/really-long-name 18
+    "my.ns/r ... ng-name"  my.ns/really-long-name 19
+    "[1 2 \" ... x\" 3 4]" [1 2 "foo bar quux" 3 4] 18))
 
 (deftest test-prepare-result
   (let [result [{:a 1, :b 2, :c 3, :d 4}
