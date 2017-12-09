@@ -1,7 +1,7 @@
 (def version
   (-> "resources/version.edn" slurp read-string))
 
-(defproject lein-jmh "0.2.3"
+(defproject lein-jmh "0.2.4-SNAPSHOT"
   :description "Run jmh-clojure benchmarks with Leiningen."
   :url "https://github.com/jgpc42/lein-jmh"
   :license {:name "Eclipse Public License"
@@ -18,6 +18,6 @@
 
   :profiles
   {:1.7 {:dependencies [[org.clojure/clojure "1.7.0"]]}
-   :1.9 {:dependencies [[org.clojure/clojure "1.9.0-RC1"]]}
+   :1.9 {:dependencies [[org.clojure/clojure "1.9.0"]]}
    :dev {:dependencies [[jmh-clojure ~(:jmh-clojure version)]]}
    :repl {:source-paths ["dev"]}})
