@@ -3,13 +3,15 @@
 
 ### Adding to your project
 
-Add `[lein-jmh "0.2.3"]` to your `:plugins` section. For example:
+Add `[lein-jmh "0.2.4"]` to your `:plugins` section. For example:
 
 ```clojure
 (defproject your-project "0.1.0-SNAPSHOT"
   #_...
-  :plugins [[lein-jmh "0.2.3"]])
+  :plugins [[lein-jmh "0.2.4"]])
 ```
+
+Clojure versions 1.7 through 1.9 are currently supported.
 
 ### What is it?
 
@@ -48,7 +50,7 @@ Please see `lein help jmh` for more information on the available options.
 
 ### Tiered compilation
 
-The JVM option `"-XX:TieredStopAtLevel=1"` is normally set automatically by Leiningen when running code in your project. This option speeds up JVM startup time but is normally problematic for benchmarking as it disables the [C2][c2] compiler.
+The JVM option `-XX:TieredStopAtLevel=1` is normally set automatically by Leiningen when running code in your project. This option speeds up JVM startup time but is normally problematic for benchmarking as it disables the [C2][c2] compiler.
 
 Since lein-jmh merges the `:jmh` profile automatically when running benchmarks, adding the following to your project's `:profiles` key should be sufficient for most users:
 
