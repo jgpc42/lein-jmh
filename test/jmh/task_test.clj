@@ -48,7 +48,7 @@
            (task/prepare-result result {:exclude #{}, :only [:a]})))
     (is (= [{:c 3, :d 4}, {:d 2}]
            (task/prepare-result result {:exclude #{:a :b}})))
-    (is (= [{:d 4}, {:d 2}]
+    (is (= [{:a 1, :d 4}, {:a 0, :d 2}]
            (task/prepare-result result {:exclude #{:a}, :only [:a :d]})))))
 
 (deftest test-progress-reporter
