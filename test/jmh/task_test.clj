@@ -7,12 +7,12 @@
               {:b 42}
               {:a [1000 "c"]}
               {:a [0 "defgh"]}]]
-    (is (= [] (task/align-column :a 2 [])))
+    (is (= [] (task/align-column :a 2 str str [])))
     (is (= [{:a "1     ab"}
             {:b 42}
             {:a "1000  c"}
             {:a "0     defgh"}]
-           (task/align-column :a 2 rows)))))
+           (task/align-column :a 2 str str rows)))))
 
 (deftest test-format-table
   (testing "empty"
@@ -76,11 +76,11 @@
     (is (= (str ":benchmark     :samples  :score         :params\n"
                 "-------------  --------  -------------  -------\n"
                 "foo                                            \n"
-                "  0.0%         1         42.0    s/op          \n"
-                "  0.5%         2         17.0    s/op          \n"
+                "  0.0%         1         42.000  s/op          \n"
+                "  0.5%         2         17.000  s/op          \n"
                 "(bar)                                   {:p {}}\n"
                 "pkg.Quux/run                                   \n"
-                "  some.metric  3         1.0E-6  x/sec         \n")
+                "  some.metric  3         ≈ 10⁻⁶  x/sec         \n")
            (with-out-str
              (task/report :table result))))))
 

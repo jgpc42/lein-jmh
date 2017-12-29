@@ -1,17 +1,29 @@
 (ns ^:internal jmh.task
   "Fns to be evaluated in a Leiningen subprocess."
   (:require [jmh.core :as jmh]
-            [clojure.pprint :as pprint :refer [pprint]]))
+            [clojure.pprint :as pprint :refer [pprint]])
+  (:import [org.openjdk.jmh.util ScoreFormatter]))
 
 (defmulti report
   "Write the given benchmark results in the specified format."
   (fn [format result] format)
   :default ::default)
 
+(defn- format-score [v]
+  (ScoreFormatter/format v))
+
+(defn- format-score-error [v]
+  (ScoreFormatter/formatError v))
+
 (defn- keyword-seq
   "Coerce value to a sequence of keywords."
   [x]
   (seq (if (keyword? x) [x] x)))
+
+(defn- some-update
+  "Update the given key in the map if it is truthy."
+  [m k f & args]
+  (apply update m k #(and % (apply f % %&)), args))
 
 ;;;
 
@@ -91,10 +103,16 @@
 
 ;;;
 
+(def ^{:doc "The default options for each format."}
+  format-options
+  {:table {:exclude [:score-confidence :statistics :threads]}})
+
 (defn finalize-options
   "Return the normalized task option map."
   [opts]
-  (let [p (:progress opts :out)
+  (let [defs (get format-options (:format opts))
+        opts (merge defs opts)
+        p (:progress opts :out)
         f (if (or (#{:out :err} p)
                   (true? p))
             (progress-reporter (if (= p :err) *err* *out*))
@@ -111,7 +129,7 @@
     (:sort opts)
     (sort (result-comparator (:sort opts)))
     (:only opts)
-    (map #(select-keys % (remove (:exclude opts) (:only opts))))
+    (map #(select-keys % (:only opts)))
     (not (:only opts))
     (map #(select-keys % (remove (:exclude opts) (keys %))))))
 
@@ -184,18 +202,27 @@
 (defn align-column
   "Update each row by aligning the given tuple key's values in its
   column: the first to the left and the second to the right."
-  [col-key sep-width rows]
-  (let [vals (map (comp count str first col-key) rows)
-        max (if (seq vals)
-              (apply max vals)
-              0)]
+  [col-key sep-width f1 f2 rows]
+  (let [rows (for [m rows]
+               (if-let [[a b] (col-key m)]
+                 (assoc m col-key [(f1 a) (f2 b)])
+                 m))
+        vals (map (comp count first col-key) rows)
+        max (apply max 0 vals)]
     (for [m rows]
-      (if-let [[n unit] (col-key m)]
-        (let [left (str n)
-              nspace (+ sep-width (- max (count left)))
+      (if-let [[a b] (col-key m)]
+        (let [nspace (+ sep-width (- max (count a)))
               sep (apply str (repeat nspace \space))]
-          (assoc m col-key (str left sep unit)))
+          (assoc m col-key (str a sep b)))
         m))))
+
+(defn format-statistics
+  "Return a string representing some of the statistical data."
+  [m]
+  (format "{:min %s :max %s :stdev %s}"
+          (format-score (:min m))
+          (format-score (:max m))
+          (format-score-error (:stdev m))))
 
 (defn normalize-row
   "Prepare the result map for table display."
@@ -204,7 +231,9 @@
         b (if (seq? b) (pr-str-max b) b)]
     (-> (dissoc row :fn :method)
         (assoc combine-key b)
-        (update :params #(and % (pr-str-max %))))))
+        (some-update :params pr-str-max)
+        (some-update :score-error format-score-error)
+        (some-update :statistics format-statistics))))
 
 (defn expand-rows
   "Flatten and append nested result map rows."
@@ -214,17 +243,21 @@
           (->> (for [[k v] (row-key row)]
                  (let [b (str "  " k
                               (when (number? k) "%"))]
-                   (assoc v combine-key b)))
+                   (-> (dissoc v :statistics)
+                       (assoc combine-key b)
+                       (some-update :score-error format-score-error))))
                (sort-by combine-key)))]
     (-> (apply dissoc row expand-keys)
         (cons (mapcat expand expand-keys)))))
 
 (defmethod report :table [_ result]
   (let [cols [combine-key :name :mode :samples
-              :score :score-error :threads :params]
+              :score :score-error :score-confidence
+              :threads :params :statistics]
 
         rows (->> (map normalize-row result)
                   (mapcat expand-rows)
-                  (align-column :score 2))]
+                  (align-column :score 2 format-score identity)
+                  (align-column :score-confidence 2 format-score format-score))]
 
     (println (format-table cols rows))))

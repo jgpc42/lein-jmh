@@ -95,13 +95,13 @@ The :jmh profile is automatically merged when running this task.
 A jmh options map may be provided as the task argument. Additionally,
 the following options are recognized by this task:
 
-  :exclude   the keys to remove of each result map.
+  :exclude   the keys to remove of each result map. Overridden by :only.
 
   :file      specify another file to read instead of 'jmh.edn'.
 
   :format    keyword. See below.
 
-  :only      the keys to select of each result map.
+  :only      the keys to select of each result map. Overrides :exclude.
 
   :output    by default the results are written to stdout. If :err,
              the results are instead written to stderr. If a string is
@@ -110,7 +110,7 @@ the following options are recognized by this task:
   :progress  if true or :out, report progress to stdout, if :err report
              to stderr. If false, ignore. Defaults to :out.
 
-  :pprint    Equivalent to :format :pprint.
+  :pprint    equivalent to :format :pprint.
 
   :sort      key or key seq. Sort results by the given keys. Each key
              may also be a tuple of [key order], where order is either
@@ -119,8 +119,12 @@ the following options are recognized by this task:
 Available output formats:
 
   :pprint  pretty print results via `clojure.pprint`.
+
   :table   tabular format. Results with nested maps (e.g., :profilers)
-           are expanded.
+           are expanded. Due to width constraints, this format elides
+           some information present in other formats. This format also
+           excludes some keys automatically. Specify an empty collection
+           to the :exclude option to show all columns.
 
 To return data about available profilers, the single keyword :profilers
 may be given in place of the options map.

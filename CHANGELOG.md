@@ -1,3 +1,10 @@
+## 0.2.5 (2017-12-29)
+
+* Upgrade jmh-clojure version to [0.2.1][jmh]
+* Format `:table` result numbers like JMH
+* Exclude some result keys by default when using `:table` format
+* Make `:only` and `:exclude` options mutually exclusive for simplicity
+
 ## 0.2.4 (2017-12-17)
 
 * Upgrade jmh-clojure version to [0.2.0][jmh]
