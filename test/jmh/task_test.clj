@@ -2,6 +2,9 @@
   (:require [jmh.task :as task]
             [clojure.test :refer :all]))
 
+(defn lines [s]
+  (seq (.split s (System/getProperty "line.separator"))))
+
 (deftest test-align-column
   (let [rows [{:a [1 "ab"]}
               {:b 42}
@@ -20,17 +23,17 @@
     (is (= "" (task/format-table [:a :b] [{:c 42}]))))
 
   (testing "row width"
-    (is (= (str ":a \n"
-                "---\n"
-                "100")
-           (task/format-table [:a :b] [{:a 100}]))))
+    (is (= [":a "
+            "---"
+            "100"]
+           (lines (task/format-table [:a :b] [{:a 100}])))))
 
   (testing "col width"
-    (is (= (str ":a  :foo\n"
-                "--  ----\n"
-                "    0   \n"
-                "0       ")
-           (task/format-table [:a :foo] [{:foo 0} {:a 0}])))))
+    (is (= [":a  :foo"
+            "--  ----"
+            "    0   "
+            "0       "]
+           (lines (task/format-table [:a :foo] [{:foo 0} {:a 0}]))))))
 
 (deftest test-pr-str-max
   (are [s x n] (= s (task/pr-str-max 'x n " ... "))
@@ -60,29 +63,29 @@
     (is (= (str "{:% 50.0 :eta \"00:00:17\"}\r"
                 "{:% 2.0 :eta \"00:00:42\"} \r"
                 "{:% 100.0 :eta \"00:00:00\"}\n")
-           s))))
+           (.replace s "\r\n" "\n")))))
 
 (deftest test-report-table
   (let [result '[{:fn foo
                   :percentiles
                   {0.0 {:samples 1, :score [42.0 "s/op"]}
-                   0.5 {:samples 2, :score [17.0 "s/op"]}}}
+                   50.0 {:samples 2, :score [17.0 "s/op"]}}}
                  {:fn (bar)
                   :params {:p {}}}
                  {:method pkg.Quux/run
                   :profilers
                   {"some.metric" {:samples 3, :score [1e-6 "x/sec"]}}}]]
 
-    (is (= (str ":benchmark     :samples  :score         :params\n"
-                "-------------  --------  -------------  -------\n"
-                "foo                                            \n"
-                "  0.0%         1         42.000  s/op          \n"
-                "  0.5%         2         17.000  s/op          \n"
-                "(bar)                                   {:p {}}\n"
-                "pkg.Quux/run                                   \n"
-                "  some.metric  3         ≈ 10⁻⁶  x/sec         \n")
-           (with-out-str
-             (task/report :table result))))))
+    (is (= [":benchmark     :samples  :score         :params"
+            "-------------  --------  -------------  -------"
+            "foo                                            "
+            "  0.0%         1         42.000  s/op          "
+            "  50.0%        2         17.000  s/op          "
+            "(bar)                                   {:p {}}"
+            "pkg.Quux/run                                   "
+            "  some.metric  3         ≈ 10⁻⁶  x/sec         "]
+           (lines (with-out-str
+                    (task/report :table result)))))))
 
 (deftest test-result-comparator
   (let [xs [{:a 1, :b 2, :c 3}
