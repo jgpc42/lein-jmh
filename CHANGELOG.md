@@ -1,3 +1,7 @@
+## 0.2.6 (2018-04-27)
+
+* Allow specifying multiple `:file`s to be merged into the final environment
+
 ## 0.2.5 (2017-12-29)
 
 * Upgrade jmh-clojure version to [0.2.1][jmh]

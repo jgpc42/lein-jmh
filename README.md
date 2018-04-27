@@ -3,12 +3,12 @@
 
 ### Adding to your project
 
-Add `[lein-jmh "0.2.5"]` to your `:plugins` section. For example:
+Add `[lein-jmh "0.2.6"]` to your `:plugins` section. For example:
 
 ```clojure
 (defproject your-project "0.1.0-SNAPSHOT"
   #_...
-  :plugins [[lein-jmh "0.2.5"]])
+  :plugins [[lein-jmh "0.2.6"]])
 ```
 
 ### What is it?
@@ -36,7 +36,7 @@ In addition to the normal run [options][run-doc], extra task options include:
 | Option        | Description                                    |
 | ------------- | ---------------------------------------------- |
 | `:exclude`    | keys to remove from each benchmark result map. |
-| `:file`       | read the given file instead of `jmh.edn`.      |
+| `:file`       | read the given file(s) instead of `jmh.edn`.   |
 | `:format`     | print results in the given format.             |
 | `:only`       | keys to select from each benchmark result map. |
 | `:output`     | specify the location to write the results.     |
@@ -45,6 +45,8 @@ In addition to the normal run [options][run-doc], extra task options include:
 | `:sort`       | key(s) to order the results by.                |
 
 Please see `lein help jmh` for more information on the available options. Note that some formats (e.g., `:table`) exclude some result information due to space considerations. See the previously mentioned help for details.
+
+The available JMH profilers may be listed with: `lein jmh :profilers`.
 
 ### Tiered compilation
 
@@ -72,7 +74,7 @@ Or, `lein test-all` for all supported Clojure versions.
 
 ### License
 
-Copyright © 2017 Justin Conklin
+Copyright © 2018 Justin Conklin
 
 Distributed under the Eclipse Public License, the same as Clojure.
 
