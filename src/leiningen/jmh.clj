@@ -52,26 +52,34 @@
     :else
     b))
 
+(defn- read-file
+  "Read the given jmh environment file as edn data."
+  [f]
+  (try
+    (-> f slurp edn/read-string)
+    (catch Exception e
+      (condp = (.getMessage e)
+        "No dispatch macro for: ("
+        (throw (RuntimeException.
+                (str "edn format does not support the '#(...)' "
+                     "anonymous function reader macro")
+                e))
+        "No dispatch macro for: \""
+        (throw (RuntimeException.
+                (str "edn format does not support the '#\"...\"' "
+                     "regex reader macro")
+                e))
+        (throw e)))))
+
 (defn merge-environment
   "Return the jmh environment map for the given project."
-  [project env-file]
-  (let [file (io/file (:root project) env-file)]
-    (merge-recursively
-     (when (.exists file)
-       (try
-         (-> file slurp edn/read-string)
-         (catch Exception e
-           (condp = (.getMessage e)
-             "No dispatch macro for: ("
-             (throw (RuntimeException.
-                     (str "edn format does not support the '#(...)' "
-                          "anonymous function reader macro")))
-             "No dispatch macro for: \""
-             (throw (RuntimeException.
-                     (str "edn format does not support the '#\"...\"' "
-                          "regex reader macro")))
-             (throw e)))))
-     (:jmh project {}))))
+  [project files]
+  (let [envs (for [f files
+                   :let [f (io/file (:root project) f)]
+                   :when (.exists f)]
+               (read-file f))]
+    (reduce merge-recursively nil
+            (concat envs [(:jmh project {})]))))
 
 (defn merge-options
   "Return the merged options map for the given project and task options."
@@ -97,7 +105,12 @@ the following options are recognized by this task:
 
   :exclude   the keys to remove of each result map. Overridden by :only.
 
-  :file      specify another file to read instead of 'jmh.edn'.
+  :file      specify another file to read instead of 'jmh.edn'. Can also
+             be a sequence of files to read; each being recursively
+             merged with the previous. Specifying multiple files can be
+             useful, for example, to organize large sets of parameters.
+
+  :files     synonym for :file.
 
   :format    keyword. See below.
 
@@ -146,8 +159,9 @@ configuration and options."
          form (if (= :profilers task-arg)
                 `(jmh.task/list-profilers)
                 (let [opts (merge-options project task-arg)
-                      file (:file opts "jmh.edn")
-                      env (merge-environment project file)]
+                      file (:file opts (:files opts "jmh.edn"))
+                      files (if (coll? file) file [file])
+                      env (merge-environment project files)]
                   (when-not (or (seq (:benchmarks env))
                                 (seq (:externs opts)))
                     (main/abort "No benchmarks found"))
