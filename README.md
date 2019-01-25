@@ -74,7 +74,7 @@ Or, `lein test-all` for all supported Clojure versions.
 
 ### License
 
-Copyright © 2018 Justin Conklin
+Copyright © 2019 Justin Conklin
 
 Distributed under the Eclipse Public License, the same as Clojure.
 
