@@ -1,14 +1,14 @@
 [![Clojars Project](https://img.shields.io/clojars/v/lein-jmh.svg)](https://clojars.org/lein-jmh)
-[![Travis CI](https://travis-ci.org/jgpc42/lein-jmh.svg?branch=master)](https://travis-ci.org/jgpc42/lein-jmh)
+[![](https://github.com/jgpc42/lein-jmh/workflows/Test%20runner/badge.svg)][ci]
 
 ### Adding to your project
 
-Add `[lein-jmh "0.2.7"]` to your `:plugins` section. For example:
+Add `[lein-jmh "0.2.8"]` to your `:plugins` section. For example:
 
 ```clojure
 (defproject your-project "0.1.0-SNAPSHOT"
   #_...
-  :plugins [[lein-jmh "0.2.7"]])
+  :plugins [[lein-jmh "0.2.8"]])
 ```
 
 ### What is it?
@@ -81,6 +81,7 @@ Distributed under the Eclipse Public License, the same as Clojure.
 
 
 [c2]:       http://openjdk.java.net/groups/hotspot/docs/HotSpotGlossary.html
+[ci]:       https://github.com/jgpc42/lein-jmh/blob/master/.github/workflows/test.yml
 [jmh-clj]:  https://github.com/jgpc42/jmh-clojure
 [run-doc]:  https://jgpc42.github.io/jmh-clojure/doc/jmh.core.html#var-run
 [sample]:   https://github.com/jgpc42/jmh-clojure/blob/master/resources/sample.jmh.edn

@@ -1,3 +1,7 @@
+## 0.2.8 (2020-07-19)
+
+* Upgrade jmh-clojure version to [0.3.1][jmh]
+
 ## 0.2.7 (2020-07-15)
 
 * Upgrade jmh-clojure version to [0.3.0][jmh]
