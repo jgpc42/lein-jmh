@@ -66,24 +66,32 @@
            (.replace s "\r\n" "\n")))))
 
 (deftest test-report-table
-  (let [result '[{:fn foo
-                  :percentiles
-                  {0.0 {:samples 1, :score [42.0 "s/op"]}
-                   50.0 {:samples 2, :score [17.0 "s/op"]}}}
-                 {:fn (bar)
-                  :params {:p {}}}
-                 {:method pkg.Quux/run
-                  :profilers
-                  {"some.metric" {:samples 3, :score [1e-6 "x/sec"]}}}]]
-
-    (is (= [":benchmark     :samples  :score         :params"
-            "-------------  --------  -------------  -------"
-            "foo                                            "
-            "  0.0%         1         42.000  s/op          "
-            "  50.0%        2         17.000  s/op          "
-            "(bar)                                   {:p {}}"
-            "pkg.Quux/run                                   "
-            "  some.metric  3         ≈ 10⁻⁶  x/sec         "]
+  (let [result [{:fn 'foo
+                 :percentiles
+                 (sorted-map
+                  50.0 {:samples 2, :score [17.0 "s/op"]}
+                  0.0 {:samples 1, :score [42.0 "s/op"]}
+                  100.0 {:samples 3, :score [100.0 "s/op"]})
+                 :profilers
+                 (sorted-map
+                  "gc.time" {:samples 5, :score [100 "y/sec"]}
+                  "gc.count" {:samples 4, :score [1 "x/sec"]})}
+                {:fn '(bar)
+                 :params {:p {}}}
+                {:method 'pkg.Quux/run
+                 :profilers
+                 (sorted-map "some.metric" {:samples 6, :score [1e-6 "z/sec"]})}]]
+    (is (= [":benchmark     :samples  :score          :params"
+            "-------------  --------  --------------  -------"
+            "foo                                             "
+            "  0.0%         1         42.000   s/op          "
+            "  50.0%        2         17.000   s/op          "
+            "  100.0%       3         100.000  s/op          "
+            "  gc.count     4         1.000    x/sec         "
+            "  gc.time      5         100.000  y/sec         "
+            "(bar)                                    {:p {}}"
+            "pkg.Quux/run                                    "
+            "  some.metric  6         ≈ 10⁻⁶   z/sec         "]
            (lines (with-out-str
                     (task/report :table result)))))))
 

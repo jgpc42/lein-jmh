@@ -245,8 +245,7 @@
                               (when (number? k) "%"))]
                    (-> (dissoc v :statistics)
                        (assoc combine-key b)
-                       (some-update :score-error format-score-error))))
-               (sort-by combine-key)))]
+                       (some-update :score-error format-score-error))))))]
     (-> (apply dissoc row expand-keys)
         (cons (mapcat expand expand-keys)))))
 
