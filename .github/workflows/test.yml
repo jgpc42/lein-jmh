@@ -23,4 +23,7 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: ${{ matrix.jdk }}
-      - run: lein test-all
+      - working-directory: task
+        run: lein test-all
+      - working-directory: plugin
+        run: lein test-all
