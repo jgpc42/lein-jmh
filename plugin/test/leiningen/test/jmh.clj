@@ -13,7 +13,7 @@
               :warnings false}
 
         {out :out, err :err} (util/run-task-in-project "sample-project" jmh/jmh [opts])
-        result (slurp temp)]
+        result (.trim (slurp temp))]
 
     #_(print result)
     (print err)
