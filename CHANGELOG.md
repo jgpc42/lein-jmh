@@ -1,3 +1,13 @@
+## 0.3.0 (2020-XX-XX)
+
+* Extract most of the code to separate [task][task] project
+* Upgrade jmh-clojure version to [0.4.0][jmh]
+* Support `:format` sequence for multiple outputs
+* Add file wildcard globbing via `:files`
+* Add support for resource paths via `:files`
+* Upgrade jmh-clojure version to [0.4.0][jmh]
+* BUGFIX: minor ordering issue with secondary results for `:table` output
+
 ## 0.2.8 (2020-07-19)
 
 * Upgrade jmh-clojure version to [0.3.1][jmh]
@@ -45,3 +55,4 @@
 
 [issue1]:  https://github.com/jgpc42/lein-jmh/issues/1
 [jmh]:     https://github.com/jgpc42/jmh-clojure/blob/master/CHANGELOG.md
+[task]:    https://github.com/jgpc42/lein-jmh/tree/master/task

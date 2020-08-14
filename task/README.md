@@ -33,7 +33,7 @@ Various file and output utilities for [jmh-clojure][jmh-clj] intended to be used
 
 ### Example
 
-As a simple example, let's create an `uberjar` to run our benchmarks standalone using [`tools.deps`][deps] via [`uberdeps`][udeps]. In a hypothetical project root:
+As a simple example, let's create an uberjar to run our benchmarks standalone using [`tools.deps`][deps] via [`uberdeps`][udeps]. In a hypothetical project:
 
 ```bash
 mkdir -p classes uberdeps
@@ -45,6 +45,8 @@ java -cp classes:../target/jmh.jar jmh.main :help
 ```
 
 For this to work, your `deps.edn` must contain this library and `"classes"` must exist and be in your `:paths`. Also note, as shown on the last line, since `jmh-clojure` generates `.class` files dynamically (written to `*compile-path*`, by default), we add this output directory to the classpath when running the uberjar main class. Running with `-Dfile.encoding=UTF-8` is also advisable depending on your platform due to the unicode characters JMH can output.
+
+#### Leiningen
 
 For Leiningen, just put the following into your `project.clj` and run `lein uberjar`.
 

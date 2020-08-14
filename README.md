@@ -37,14 +37,14 @@ In addition to the normal run [options][run-doc], extra task options include:
 | ------------- | ---------------------------------------------- |
 | `:exclude`    | keys to remove from each benchmark result map. |
 | `:file`       | read the given file(s) instead of `jmh.edn`.   |
-| `:format`     | print results in the given format.             |
+| `:format`     | print results in the given format(s).          |
 | `:only`       | keys to select from each benchmark result map. |
 | `:output`     | specify the location to write the results.     |
 | `:pprint`     | equivalent to `:format :pprint`.               |
 | `:progress`   | display progress data while running.           |
 | `:sort`       | key(s) to order the results by.                |
 
-Please see `lein help jmh` for more information on the available options. Note that some formats (e.g., `:table`) exclude some result information due to space considerations. See the previously mentioned help for details.
+Please see `lein jmh :help` for more information on the available options. Note that some formats (e.g., `:table`) exclude some result information due to space considerations. See the previously mentioned help for details.
 
 The available JMH profilers may be listed with: `lein jmh :profilers`.
 
@@ -62,7 +62,7 @@ Alternatively, use `:fork` and specify different `:jvm :args` to override the Le
 
 ### More information
 
-This plugin is a wrapper for the [jmh-clojure][jmh-clj] library. Please see the documentation there for more.
+This plugin is a very thin wrapper for the companion [`jmh-clojure/task`][task] library.
 
 ### Running the tests
 
@@ -85,3 +85,4 @@ Distributed under the Eclipse Public License, the same as Clojure.
 [jmh-clj]:  https://github.com/jgpc42/jmh-clojure
 [run-doc]:  https://jgpc42.github.io/jmh-clojure/doc/jmh.core.html#var-run
 [sample]:   https://github.com/jgpc42/jmh-clojure/blob/master/resources/sample.jmh.edn
+[task]:     https://github.com/jgpc42/lein-jmh/tree/master/task
