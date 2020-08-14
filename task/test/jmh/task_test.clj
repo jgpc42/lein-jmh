@@ -5,6 +5,22 @@
 (defn lines [s]
   (seq (.split s (System/getProperty "line.separator"))))
 
+(deftest test-merge-recursively
+  (is (= {:a [1 5], :b {:c 6, :d #{3 7}}, :e 4, :f 8}
+         (task/merge-recursively
+          {:a '(1), :b {:c 2, :d #{3}}, :e 4}
+          {:a [5], :b {:c 6, :d #{7}}, :f 8}))))
+
+(deftest test-glob
+  (let [files (task/glob {::task/root "./src/jmh"} "*.clj")]
+    (is (= 2 (count (for [f files
+                          :when (instance? java.io.File f)]
+                      f))))))
+
+(deftest test-merge-environment
+  (is (= {:options {:foo {:mode :single-shot, :threads 2, :fork 3}}}
+         (task/merge-environment {}))))
+
 (deftest test-align-column
   (let [rows [{:a [1 "ab"]}
               {:b 42}
@@ -72,14 +88,14 @@
                   50.0 {:samples 2, :score [17.0 "s/op"]}
                   0.0 {:samples 1, :score [42.0 "s/op"]}
                   100.0 {:samples 3, :score [100.0 "s/op"]})
-                 :profilers
+                 :secondary
                  (sorted-map
                   "gc.time" {:samples 5, :score [100 "y/sec"]}
                   "gc.count" {:samples 4, :score [1 "x/sec"]})}
                 {:fn '(bar)
                  :params {:p {}}}
                 {:method 'pkg.Quux/run
-                 :profilers
+                 :secondary
                  (sorted-map "some.metric" {:samples 6, :score [1e-6 "z/sec"]})}]]
     (is (= [":benchmark     :samples  :score          :params"
             "-------------  --------  --------------  -------"
