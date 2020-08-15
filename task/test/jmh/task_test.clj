@@ -23,7 +23,9 @@
   (is (= {:options {:foo {:mode :single-shot, :threads 2, :fork 3}}}
          (task/merge-environment {:files ["jmh.edn" [:resource "jmh.edn"]]})))
   (is (= {:options {:foo {:mode :single-shot, :threads 2, :fork 3}}}
-         (task/merge-environment {:files [[:glob "*.edn"] [:glob "**/*.edn"]]}))))
+         (task/merge-environment {:files [[:glob "*.edn"] [:glob "**/*.edn"]]})))
+  (is (= {:options {:foo {:mode :single-shot, :threads 2}}}
+         (task/merge-environment {:files [[:glob "dev-resources/*.edn"]]}))))
 
 (deftest test-align-column
   (let [rows [{:a [1 "ab"]}
