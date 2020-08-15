@@ -5,7 +5,8 @@
             [clojure.java.io :as io]
             [clojure.set :as set]
             [clojure.pprint :as pprint :refer [pprint]])
-  (:import [java.nio.file Files Path Paths]
+  (:import [java.nio.file Files FileSystems FileVisitOption Path Paths]
+           [java.util.function Predicate]
            [org.openjdk.jmh.util ScoreFormatter]))
 
 (defmulti report
@@ -64,25 +65,22 @@
 
 (defn glob
   "Return a File seq of paths matching the wildcard pattern."
-  [opts ^String wildcard]
-  (when wildcard
+  [opts ^String pattern]
+  (when pattern
     (let [root (:jmh.task/root opts ".")
-          paths (Paths/get root (into-array String []))]
-      (->> (Files/newDirectoryStream paths wildcard)
-           (map #(.toFile ^Path %))))))
-
-(def ^{:dynamic true
-       :doc "The default :files that provide the benchmark environment."}
-  *files* ["jmh.edn" [:resource "jmh.edn"]])
+          path (Paths/get root (into-array String []))
+          matcher (-> (FileSystems/getDefault)
+                      (.getPathMatcher (str "glob:" pattern)))
+          paths (-> (Files/walk path (into-array FileVisitOption []))
+                    (.filter (reify Predicate
+                               (test [_ p] (.matches matcher (.relativize path ^Path p)))))
+                    .toArray)]
+      (map #(.toFile ^Path %) paths))))
 
 (defn merge-environment
   "Return the jmh environment map."
   [opts]
-  (let [file (:file opts (:files opts *files*))
-        files (if (and (coll? file) (not (keyword? (first file))))
-                file
-                [file])
-        root (:jmh.task/root opts ".")
+  (let [root (:jmh.task/root opts ".")
         files (mapcat
                (fn [x]
                  (cond
@@ -97,17 +95,47 @@
                    (glob opts (second x))
                    :else
                    nil))
-               files)
+               (:files opts))
         envs (map read-file files)]
     (reduce merge-recursively nil
             (concat envs [(:jmh.task/env opts {})]))))
 
+(def ^{:dynamic true
+       :doc "The default :files that provide the benchmark environment."}
+  *files* ["jmh.edn" [:resource "jmh.edn"]])
+
+(def ^{:doc "The default options for each format."}
+  format-options
+  {:table {:exclude [:score-confidence :statistics :threads]}})
+
+(declare progress-reporter)
+
 (defn normalize-options
   "Return the merged options map for the task options."
   [opts]
-  (if (:pprint opts)
-    (assoc opts :format :pprint)
-    opts))
+  (let [opts (if (:pprint opts)
+               (assoc opts :format :pprint)
+               opts)
+
+        file (:file opts (:files opts *files*))
+        files (if (and (coll? file) (not (keyword? (first file))))
+                file
+                [file])
+        formats (keyword-seq (:format opts ::default))
+
+        defs (apply merge (for [f formats] (get format-options f)))
+        opts (merge defs opts)
+
+        p (:progress opts :out)
+        f (if (or (#{:out :err} p)
+                  (true? p))
+            (progress-reporter (if (= p :err) *err* *out*))
+            (eval p))]
+
+    (-> (assoc opts :files files :formats formats :progress f)
+        (update :exclude (comp set keyword-seq))
+        (update :only keyword-seq)
+        (update :sort keyword-seq))))
 
 ;;;
 
@@ -189,26 +217,6 @@
 
 ;;;
 
-(def ^{:doc "The default options for each format."}
-  format-options
-  {:table {:exclude [:score-confidence :statistics :threads]}})
-
-(defn finalize-options
-  "Return the normalized task option map."
-  [opts]
-  (let [fmts (keyword-seq (:format opts ::default))
-        defs (apply merge (for [f fmts] (get format-options f)))
-        opts (merge defs opts {:format fmts})
-        p (:progress opts :out)
-        f (if (or (#{:out :err} p)
-                  (true? p))
-            (progress-reporter (if (= p :err) *err* *out*))
-            (eval p))]
-    (-> (assoc opts :progress f)
-        (update :exclude (comp set keyword-seq))
-        (update :only keyword-seq)
-        (update :sort keyword-seq))))
-
 (defn prepare-result
   "Sort and select result keys."
   [result opts]
@@ -223,19 +231,22 @@
 (defn run-benchmarks
   "Run the given benchmark environment and options."
   [env {dest :output :as opts}]
-  (let [opts (finalize-options opts)
-        result (try
+  (let [result (try
                  (jmh/run env opts)
                  (catch Exception e
-                   (.printStackTrace e)
+                   (if (re-find #"^no benchmarks defined" (or (.getMessage e) ""))
+                     (prn {:error (.getMessage e)
+                           :files (:files opts)})
+                     (.printStackTrace e))
                    (System/exit 1)))
 
         result (prepare-result result opts)
 
         output (with-out-str
-                 (doseq [kind (:format opts)]
+                 (doseq [kind (:formats opts)]
                    (println)
                    (report kind result)))]
+
     (if (string? dest)
       (spit dest output)
       (binding [*out* (if (= :err dest) *err* *out*)]
@@ -295,7 +306,7 @@
 
   :pprint  pretty print results via `clojure.pprint/pprint`.
 
-  :table   tabular format. Results with nested maps (e.g., :profilers)
+  :table   tabular format. Results with nested maps (e.g., :percentiles)
            are expanded. Due to width constraints, this format elides
            some information present in other formats. This format also
            excludes some keys automatically. Specify an empty collection

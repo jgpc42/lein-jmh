@@ -1,3 +1,5 @@
+[![Clojars Project](https://img.shields.io/clojars/v/jmh-clojure/task.svg)](https://clojars.org/jmh-clojure/task)
+
 ### Dependency and version information
 <details>
   <summary>Click to show</summary>
@@ -57,6 +59,8 @@ For Leiningen, just put the following into your `project.clj` and run `lein uber
                        :main jmh.main}})
 ```
 
+A more involved example using Leiningen can be found [here][async].
+
 The procedure for other tools should be similarly straightforward.
 
 ### More information
@@ -73,6 +77,7 @@ Or, `lein test-all` for all supported Clojure versions.
 
 
 
+[async]:    https://gist.github.com/jgpc42/a694c8b4255ed332dac38428bd4e0546
 [ci]:       https://github.com/jgpc42/lein-jmh/blob/master/.github/workflows/test.yml
 [deps]:     https://github.com/clojure/tools.deps.alpha
 [jmh-clj]:  https://github.com/jgpc42/jmh-clojure
