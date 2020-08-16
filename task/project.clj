@@ -3,6 +3,7 @@
   :url "https://github.com/jgpc42/lein-jmh/tree/master/task"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
+  :scm {:dir ".."}
 
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [jmh-clojure "0.4.0-SNAPSHOT"]]
