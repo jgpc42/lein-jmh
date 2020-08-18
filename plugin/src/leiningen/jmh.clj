@@ -39,5 +39,5 @@
                      :jmh.task/root (:root project)}]
      (eval/eval-in-project
       project
-      `(jmh.task/main ~task-arg ~extra-opts)
+      `(jmh.task/main '~task-arg '~extra-opts)
       `(require 'jmh.task)))))
