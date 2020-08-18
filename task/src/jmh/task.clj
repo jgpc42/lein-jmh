@@ -12,7 +12,7 @@
 (defmulti report
   "Write the given benchmark results in the specified format."
   (fn [format result] format)
-  :default ::default)
+  :default :default)
 
 (defn- format-score [v]
   (ScoreFormatter/format v))
@@ -121,7 +121,7 @@
         files (if (and (coll? file) (not (keyword? (first file))))
                 file
                 [file])
-        formats (keyword-seq (:format opts ::default))
+        formats (keyword-seq (:format opts :default))
 
         defs (apply merge (for [f formats] (get format-options f)))
         opts (merge defs opts)
@@ -285,7 +285,7 @@
              data is recursively merged from left to right.
 
   :format    keyword or sequence of keywords (for multiple outputs).
-             See below.
+             See below. Unspecified or :default for normal output.
 
   :only      the keys to select of each result map. Overrides :exclude.
 
@@ -335,7 +335,7 @@
 
 ;;;
 
-(defmethod report ::default [_ result]
+(defmethod report :default [_ result]
   (prn result))
 
 (defmethod report :pprint [_ result]
@@ -411,12 +411,12 @@
   [row]
   (let [expand
         (fn [row-key]
-          (->> (for [[k v] (row-key row)]
-                 (let [b (str "  " k
-                              (when (number? k) "%"))]
-                   (-> (dissoc v :statistics)
-                       (assoc combine-key b)
-                       (some-update :score-error format-score-error))))))]
+          (for [[k v] (row-key row)]
+            (let [b (str "  " k
+                         (when (number? k) "%"))]
+              (-> (dissoc v :statistics)
+                  (assoc combine-key b)
+                  (some-update :score-error format-score-error)))))]
     (-> (apply dissoc row expand-keys)
         (cons (mapcat expand expand-keys)))))
 
