@@ -19,11 +19,11 @@
 
 (deftest test-merge-environment
   (is (= {:options {:foo {:mode :average, :fork 3}}}
-         (task/merge-environment {:files [[:glob "*.edn"]]})))
+         (task/merge-environment {:files [[:glob "j*.edn"]]})))
   (is (= {:options {:foo {:mode :single-shot, :threads 2, :fork 3}}}
          (task/merge-environment {:files ["jmh.edn" [:resource "jmh.edn"]]})))
   (is (= {:options {:foo {:mode :single-shot, :threads 2, :fork 3}}}
-         (task/merge-environment {:files [[:glob "*.edn"] [:glob "**/*.edn"]]})))
+         (task/merge-environment {:files [[:glob "j*.edn"] [:glob "**/j*.edn"]]})))
   (is (= {:options {:foo {:mode :single-shot, :threads 2}}}
          (task/merge-environment {:files [[:glob "dev-resources/*.edn"]]}))))
 
