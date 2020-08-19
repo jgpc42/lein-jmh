@@ -1,4 +1,4 @@
-## 0.3.0 (2020-XX-XX)
+## 0.3.0 (2020-08-19)
 
 * Extract most of the code to separate [task][task] project
 * Support `:format` sequence for multiple outputs
