@@ -3,7 +3,7 @@
        :deps (mapv #(vector (% 0) (:mvn/version (% 1))))
        (into '[[org.clojure/clojure "1.8.0"]])))
 
-(defproject jmh-clojure/task "0.1.0-SNAPSHOT"
+(defproject jmh-clojure/task "0.1.1-SNAPSHOT"
   :description "Various jmh-clojure file and output utilities."
   :url "https://github.com/jgpc42/lein-jmh/tree/master/task"
   :license {:name "Eclipse Public License"
