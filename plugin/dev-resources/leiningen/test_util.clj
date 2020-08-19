@@ -41,7 +41,6 @@
          profiles (update-in profiles [:user] assoc
                              :clean-targets targets)
          project (read-project profiles dir)
-         [out err] (map volatile! (repeat nil))
          args (for [a args]
                 (binding [*print-dup* false]
                   (with-out-str (pr a))))

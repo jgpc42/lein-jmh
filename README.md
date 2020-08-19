@@ -3,12 +3,11 @@
 
 ### Adding to your project
 
-Add `[lein-jmh "0.2.8"]` to your `:plugins` section. For example:
+Add `[lein-jmh "0.3.0"]` to your `:plugins` section. For example:
 
 ```clojure
-(defproject your-project "0.1.0-SNAPSHOT"
-  #_...
-  :plugins [[lein-jmh "0.2.8"]])
+(defproject your-project #_...
+  :plugins [[lein-jmh "0.3.0"]])
 ```
 
 ### What is it?
@@ -60,21 +59,17 @@ Since lein-jmh merges the `:jmh` profile automatically when running benchmarks, 
 
 Alternatively, use `:fork` and specify different `:jvm :args` to override the Leiningen parent process arguments. This can be specified in your `jmh.edn` file, or globally via the task options map.
 
+### Uberjar support
+
+See the companion project [README][uberjar].
+
 ### More information
 
 This plugin is a very thin wrapper for the companion [`jmh-clojure/task`][task] library.
 
-### Running the tests
-
-```bash
-lein test
-```
-
-Or, `lein test-all` for all supported Clojure versions.
-
 ### License
 
-Copyright © 2020 Justin Conklin
+Copyright © 2017-2020 Justin Conklin
 
 Distributed under the Eclipse Public License, the same as Clojure.
 
@@ -86,3 +81,4 @@ Distributed under the Eclipse Public License, the same as Clojure.
 [run-doc]:  https://jgpc42.github.io/jmh-clojure/doc/jmh.core.html#var-run
 [sample]:   https://github.com/jgpc42/jmh-clojure/blob/master/resources/sample.jmh.edn
 [task]:     https://github.com/jgpc42/lein-jmh/tree/master/task
+[uberjar]:  https://github.com/jgpc42/lein-jmh/tree/master/task#leiningen

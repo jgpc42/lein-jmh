@@ -1,4 +1,4 @@
-(defproject lein-jmh "0.3.0-SNAPSHOT"
+(defproject lein-jmh "0.3.0"
   :description "Run jmh-clojure benchmarks with Leiningen."
   :url "https://github.com/jgpc42/lein-jmh"
   :license {:name "Eclipse Public License"
