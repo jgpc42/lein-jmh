@@ -1,9 +1,8 @@
-(defproject lein-jmh "0.3.0"
+(defproject lein-jmh "0.3.1-SNAPSHOT"
   :description "Run jmh-clojure benchmarks with Leiningen."
   :url "https://github.com/jgpc42/lein-jmh"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :scm {:dir ".."}
 
   :dependencies [[org.clojure/clojure "1.8.0"]]
 
