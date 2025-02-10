@@ -1,3 +1,7 @@
+## 0.3.1 (202X-XX-XX)
+
+* Upgrade to version `0.1.1` of the [task library][task]
+
 ## 0.3.0 (2020-08-19)
 
 * Extract most of the code to separate [task][task] project
@@ -54,4 +58,4 @@
 
 [issue1]:  https://github.com/jgpc42/lein-jmh/issues/1
 [jmh]:     https://github.com/jgpc42/jmh-clojure/blob/master/CHANGELOG.md
-[task]:    https://github.com/jgpc42/lein-jmh/tree/master/task
+[task]:    https://github.com/jgpc42/jmh-clojure-task

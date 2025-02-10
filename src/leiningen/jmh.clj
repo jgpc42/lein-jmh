@@ -22,7 +22,7 @@
 
   The :jmh profile is automatically merged when running this task.
 
-  This plugin is a very thin wrapper for the `jmh-clojure/task` library.
+  This plugin is a very thin wrapper for the `jmh-clojure-task` library.
   Please run `lein jmh :help` to view what it provides to this plugin."
   ([project]
    (jmh project "nil"))

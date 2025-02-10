@@ -48,7 +48,7 @@ Since lein-jmh merges the `:jmh` profile automatically when running benchmarks, 
 :profiles {:jmh {:jvm-opts []}}
 ```
 
-Alternatively, use `:fork` and specify different `:jvm :args` to override the Leiningen parent process arguments. This can be specified in your `jmh.edn` file, or globally via the task options map.
+Alternatively, use `:fork` and specify different `:jvm :args` to override the parent process arguments. This can be specified in your `jmh.edn` file, or globally via the task options map.
 
 ### Running the tests
 

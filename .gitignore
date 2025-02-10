@@ -1,4 +1,3 @@
-.dir-locals.el
 .lein-*
 .nrepl-*
 pom.xml
